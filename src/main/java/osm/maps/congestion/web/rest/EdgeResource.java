@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import osm.maps.congestion.domain.parser.DirectedEdge;
+import osm.maps.congestion.repository.DirectedEdgeRepository;
 import osm.maps.congestion.service.EdgeService;
 import osm.maps.congestion.web.rest.dto.EdgeDTO;
 import osm.maps.congestion.web.rest.mapper.EdgeMapper;
@@ -37,6 +38,9 @@ public class EdgeResource {
 
     @Inject
     private EdgeService edgeService;
+
+    @Inject
+    private DirectedEdgeRepository edgeRepository;
 
     @Inject
     private EdgeMapper edgeMapper;
@@ -94,6 +98,25 @@ public class EdgeResource {
             .map(edgeMapper::edgeToEdgeDTO)
             .collect(Collectors.toCollection(LinkedList::new)), headers, HttpStatus.OK);
     }
+
+    /**
+     * GET  /edges -> get all the edges.
+
+    @RequestMapping(value = "/edges",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    @Transactional(readOnly = true)
+    public ResponseEntity<List<EdgeDTO>> getAllEdges()
+        throws URISyntaxException {
+        log.debug("REST request to get a page of Edges");
+        return new ResponseEntity<>(
+            edgeRepository.findAll().stream()
+                .map(edgeMapper::edgeToEdgeDTO)
+                .collect(Collectors.toList()),
+            HttpStatus.OK
+        );
+    }*/
 
     /**
      * GET  /edges/:id -> get the "id" edge.

@@ -65,7 +65,7 @@ public class OsmService {
             e1.printStackTrace();
         }*/
 
-     //   addToDb();
+        //addToDb();
 
         watch.stop();
         log.debug("OsmService initialized in: {}",
@@ -92,9 +92,11 @@ public class OsmService {
     }
 
     public void addToDb() {
-        File[] mareLista = listFilesMatching(new File("/home/cerber/Servers/map-congestion"), "iasi_romania.osm");
+        File[] mareLista = listFilesMatching(new File("/home/cerber/Servers/map-congestion"), ".*-osm.xml");
 
+        int k = 0;
         for (File file : mareLista) {
+            log.debug("Parsing file {} from {}.", k++, mareLista.length);
             parseTheFile(file.toPath());
         }
     }

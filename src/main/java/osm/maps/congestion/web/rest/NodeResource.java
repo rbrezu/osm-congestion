@@ -3,8 +3,11 @@ package osm.maps.congestion.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.geo.Box;
+import org.springframework.data.geo.Point;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,7 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import osm.maps.congestion.domain.parser.GraphNode;
+import osm.maps.congestion.repository.GraphNodeRepository;
 import osm.maps.congestion.service.NodeService;
+import osm.maps.congestion.service.servers.BBox;
 import osm.maps.congestion.web.rest.dto.NodeDTO;
 import osm.maps.congestion.web.rest.mapper.NodeMapper;
 import osm.maps.congestion.web.rest.util.HeaderUtil;
@@ -40,6 +45,9 @@ public class NodeResource {
 
     @Inject
     private NodeMapper nodeMapper;
+
+    @Inject
+    private GraphNodeRepository nodeRepository;
 
     /**
      * POST  /nodes -> Create a new node.
@@ -84,15 +92,42 @@ public class NodeResource {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    @Transactional(readOnly = true)
-    public ResponseEntity<List<NodeDTO>> getAllNodes(Pageable pageable)
+    public ResponseEntity<List<GraphNode>> getAllNodes(Pageable pageable)
         throws URISyntaxException {
         log.debug("REST request to get a page of Nodes");
         Page<GraphNode> page = nodeService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/nodes");
-        return new ResponseEntity<>(page.getContent().stream()
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    /**
+     * GET  /nodes -> get all the nodes.
+     */
+    @RequestMapping(value = "/nodesbbox",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<List<NodeDTO>> getAllNodesInside(
+        Pageable pageable,
+        @RequestParam Double latSW,
+        @RequestParam Double lonSW,
+        @RequestParam Double latNE,
+        @RequestParam Double lonNE
+    )
+        throws URISyntaxException {
+        log.debug("REST request to get a page of Nodes");
+        Page<GraphNode> page = nodeRepository.findAllByLocationWithin(
+            pageable,
+            new Box(
+                new Point(lonSW, latSW),
+                new Point(lonNE, latNE)
+            ));
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/nodebbox");
+        return new ResponseEntity<>(page.getContent()
+            .stream()
             .map(nodeMapper::nodeToNodeDTO)
-            .collect(Collectors.toCollection(LinkedList::new)), headers, HttpStatus.OK);
+            .collect(Collectors.toList()), headers, HttpStatus.OK
+        );
     }
 
     /**

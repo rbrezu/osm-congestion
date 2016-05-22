@@ -1,5 +1,6 @@
 package osm.maps.congestion.domain.parser;
 
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -64,16 +65,17 @@ public class RoadGraph {
                         if(xrp.getName().equals("node")){
 						/*The node values are temporarily stored in tempNode*/
                             tempNode = new GraphNode();
+                            double lat = 0.0, lon = 0.0;
                             for(int i = 0; i < attributeCount; i++){
                                 if(xrp.getAttributeName(i).equals("id")){
                                     tempNode.setId(Long.parseLong(xrp.getAttributeValue(i)));
                                 } if(xrp.getAttributeName(i).equals("lat")){
-                                    tempNode.setLat(Double.parseDouble(xrp.getAttributeValue(i)));
+                                    lat = Double.parseDouble(xrp.getAttributeValue(i));
                                 } if(xrp.getAttributeName(i).equals("lon")){
-                                    tempNode.setLon(Double.parseDouble(xrp.getAttributeValue(i)));
+                                    lon = Double.parseDouble(xrp.getAttributeValue(i));
                                 }
                             }
-
+                            tempNode.setLocation(new GeoJsonPoint(lon, lat));
                         }
 					/*Extracting road attributes*/
                         else if(xrp.getName().equals("tag")){
@@ -164,8 +166,8 @@ public class RoadGraph {
             GraphNode firstNode = getNode(allNodes, (Long) way.getRefs().get(0));
             for(int i = 1; i <= way.getRefs().size() - 1; i++){
                 GraphNode nextNode = getNode(allNodes, (Long) way.getRefs().get(i));
-                double len = distanceInMilesBetweenPoints(firstNode.getLat(),firstNode.getLon(),
-                    nextNode.getLat(),nextNode.getLon());
+                double len = distanceInMilesBetweenPoints(firstNode.getLocation().getY(),firstNode.getLocation().getX(),
+                    nextNode.getLocation().getY(),nextNode.getLocation().getX());
 
                 if(way.getType()==null){
                     way.setSpeedMax(30);

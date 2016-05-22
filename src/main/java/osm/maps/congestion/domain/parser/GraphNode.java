@@ -1,6 +1,10 @@
 package osm.maps.congestion.domain.parser;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
@@ -18,32 +22,21 @@ public class GraphNode implements Serializable {
      *
      */
 
-    private double lon;
-    private double lat;
+    @GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE)
+    private GeoJsonPoint location;
 
     @Id
     private long id;
 
 
     public GraphNode() {
-        this.lon = 0.0;
-        this.lat = 0.0;
+        this.location = new GeoJsonPoint(0, 0);
         this.id = 0;
     }
 
     public GraphNode(double lat, double lon, long id) {
-        this.lon = lon;
-        this.lat = lat;
+        this.location = new GeoJsonPoint(lat, lon);
         this.id = id;
-    }
-
-
-    public double getLon() {
-        return lon;
-    }
-
-    public double getLat() {
-        return lat;
     }
 
 
@@ -51,16 +44,16 @@ public class GraphNode implements Serializable {
         return id;
     }
 
-    public void setLon(double lon) {
-        this.lon = lon;
-    }
-
-    public void setLat(double lat) {
-        this.lat = lat;
-    }
-
     public void setId(long l){
         this.id = l;
+    }
+
+    public GeoJsonPoint getLocation() {
+        return location;
+    }
+
+    public void setLocation(GeoJsonPoint location) {
+        this.location = location;
     }
 
     @Override
@@ -71,18 +64,18 @@ public class GraphNode implements Serializable {
         return (node_x.id == this.id);
     }
 
-    public String toString(){
-        String rt_str;
-        rt_str = this.id+", ("+this.lat+ "," + this.lon+")";
-        return	rt_str;
+    @Override
+    public String toString() {
+        return "GraphNode{" +
+            "location=" + location +
+            ", id=" + id +
+            '}';
     }
 
     @Override
     public int hashCode() {
-        int hash = 1;
-        hash = hash+((int) Math.round(this.lat*1000) );
-        hash = hash+((int) Math.round(this.lon*1000) );
-        hash = (int) (hash+this.id);
-        return hash;
+        int result = location != null ? location.hashCode() : 0;
+        result = 31 * result + (int) (id ^ (id >>> 32));
+        return result;
     }
 }

@@ -21,7 +21,7 @@ spring:
     data:
         mongodb:
             uri: mongodb://localhost:27017
-            database: osm
+            database: osm3
     mail:
         host: localhost
     messages:
