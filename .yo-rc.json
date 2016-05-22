@@ -1,0 +1,24 @@
+{
+  "generator-jhipster": {
+    "baseName": "osmmapscongestion",
+    "packageName": "osm.maps.congestion",
+    "packageFolder": "osm/maps/congestion",
+    "authenticationType": "oauth2",
+    "hibernateCache": "no",
+    "clusteredHttpSession": "no",
+    "websocket": "spring-websocket",
+    "databaseType": "mongodb",
+    "devDatabaseType": "mongodb",
+    "prodDatabaseType": "mongodb",
+    "searchEngine": "no",
+    "useSass": false,
+    "buildTool": "maven",
+    "frontendBuilder": "grunt",
+    "enableTranslation": true,
+    "enableSocialSignIn": false,
+    "rememberMeKey": "5b16590786c661adbf64fb14ac5c1fe430444d05",
+    "testFrameworks": [
+      "gatling"
+    ]
+  }
+}

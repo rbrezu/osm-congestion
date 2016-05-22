@@ -1,0 +1,7 @@
+osmmapscongestion-dev-mongodb:
+  container_name: osmmapscongestion-dev-mongodb
+  image: mongo:3.0.7
+  # volumes:
+  #   - ~/volumes/jhipster/osmmapscongestion/dev-mongodb/:/data/db/
+  ports:
+    - "27017:27017"

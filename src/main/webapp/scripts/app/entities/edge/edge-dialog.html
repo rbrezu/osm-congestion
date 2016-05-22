@@ -1,0 +1,82 @@
+
+<form name="editForm" role="form" novalidate ng-submit="save()">
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                ng-click="clear()">&times;</button>
+        <h4 class="modal-title" id="myEdgeLabel" translate="osmmapscongestionApp.edge.home.createOrEditLabel">Create or edit a Edge</h4>
+    </div>
+    <div class="modal-body">
+        <jh-alert-error></jh-alert-error>
+        <div class="form-group">
+            <label for="id" translate="global.field.id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                    ng-model="edge.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="control-label" translate="osmmapscongestionApp.edge.length" for="field_length">Length</label>
+            <input type="number" class="form-control" name="length" id="field_length"
+                    ng-model="edge.length"
+                     />
+        </div>
+        <div class="form-group">
+            <label class="control-label" translate="osmmapscongestionApp.edge.speedMax" for="field_speedMax">SpeedMax</label>
+            <input type="number" class="form-control" name="speedMax" id="field_speedMax"
+                    ng-model="edge.speedMax"
+                     />
+        </div>
+        <div class="form-group">
+            <label class="control-label" translate="osmmapscongestionApp.edge.type" for="field_type">Type</label>
+            <input type="text" class="form-control" name="type" id="field_type"
+                    ng-model="edge.type"
+                     />
+        </div>
+        <div class="form-group">
+            <label class="control-label" translate="osmmapscongestionApp.edge.name" for="field_name">Name</label>
+            <input type="text" class="form-control" name="name" id="field_name"
+                    ng-model="edge.name"
+                     />
+        </div>
+        <div class="form-group">
+            <label class="control-label" translate="osmmapscongestionApp.edge.isOneway" for="field_isOneway">IsOneway</label>
+            <input type="checkbox" class="form-control" name="isOneway" id="field_isOneway"
+                    ng-model="edge.isOneway"
+                     />
+        </div>
+        <div class="form-group">
+            <label class="control-label" translate="osmmapscongestionApp.edge.weight" for="field_weight">Weight</label>
+            <input type="number" class="form-control" name="weight" id="field_weight"
+                    ng-model="edge.weight"
+                     />
+        </div>
+        <div class="form-group">
+            <label class="control-label" translate="osmmapscongestionApp.edge.way_id" for="field_way_id">Way_id</label>
+            <input type="number" class="form-control" name="way_id" id="field_way_id"
+                    ng-model="edge.way_id"
+                     />
+        </div>
+
+        <div class="form-group">
+            <label class="control-label" for="field_startNode">StartNode</label>
+            <input type="number" class="form-control" name="startNode" id="field_startNode"
+                   ng-model="edge.startNode"
+                />
+        </div>
+
+        <div class="form-group">
+            <label class="control-label" for="field_endNode">EndNode</label>
+            <input type="number" class="form-control" name="endNode" id="field_endNode"
+                   ng-model="edge.endNode"
+                />
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span translate="entity.action.cancel">Cancel</span>
+        </button>
+        <button type="submit" ng-disabled="editForm.$invalid || isSaving" class="btn btn-primary">
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span translate="entity.action.save">Save</span>
+        </button>
+    </div>
+</form>

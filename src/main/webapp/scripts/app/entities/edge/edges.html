@@ -1,0 +1,75 @@
+<div>
+    <h2 translate="osmmapscongestionApp.edge.home.title">Edges</h2>
+    <jh-alert></jh-alert>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-4 no-padding-left">
+                <button class="btn btn-primary" ui-sref="edge.new" >
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <span
+                        translate="osmmapscongestionApp.edge.home.createLabel">Create new Edge
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive">
+        <table class="jh-table table table-striped">
+            <thead>
+                <tr jh-sort="predicate" ascending="reverse" callback="loadAll()">
+                    <th jh-sort-by="id"><span translate="global.field.id">ID</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="length"><span translate="osmmapscongestionApp.edge.length">Length</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="speedMax"><span translate="osmmapscongestionApp.edge.speedMax">SpeedMax</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="type"><span translate="osmmapscongestionApp.edge.type">Type</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="name"><span translate="osmmapscongestionApp.edge.name">Name</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="isOneway"><span translate="osmmapscongestionApp.edge.isOneway">IsOneway</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="weight"><span translate="osmmapscongestionApp.edge.weight">Weight</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="way_id"><span translate="osmmapscongestionApp.edge.way_id">Way_id</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="startNode"><span>NodeStart</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="endNode"><span>NodeEnd</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="edge in edges track by edge.id">
+                    <td><a ui-sref="edge.detail({id:edge.id})">{{edge.id}}</a></td>
+                    <td>{{edge.length}}</td>
+                    <td>{{edge.speedMax}}</td>
+                    <td>{{edge.type}}</td>
+                    <td>{{edge.name}}</td>
+                    <td>{{edge.isOneway}}</td>
+                    <td>{{edge.weight}}</td>
+                    <td>{{edge.way_id}}</td>
+                    <td><a ui-sref="node.detail({id:edge.startNode})">{{edge.startNode}}</a></td>
+                    <td><a ui-sref="node.detail({id:edge.endNode})">{{edge.endNode}}</a></td>
+                    <td class="text-right">
+                        <div class="btn-group flex-btn-group-container">
+                            <button type="submit"
+                                    ui-sref="edge.detail({id:edge.id})"
+                                    class="btn btn-info btn-sm">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                                <span class="hidden-xs hidden-sm" translate="entity.action.view"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="edge.edit({id:edge.id})"
+                                    class="btn btn-primary btn-sm">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                                <span class="hidden-xs hidden-sm" translate="entity.action.edit"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="edge.delete({id:edge.id})"
+                                    class="btn btn-danger btn-sm">
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                                <span class="hidden-xs hidden-sm" translate="entity.action.delete"></span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="text-center">
+        <uib-pagination class="pagination-sm" total-items="totalItems" ng-model="page" ng-change="loadAll()"></uib-pagination>
+    </div>
+</div>

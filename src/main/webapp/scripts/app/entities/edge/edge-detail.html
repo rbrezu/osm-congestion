@@ -1,0 +1,94 @@
+
+<div>
+    <h2><span translate="osmmapscongestionApp.edge.detail.title">Edge</span> {{edge.id}}</h2>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th translate="entity.detail.field">Field</th>
+                <th translate="entity.detail.value">Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <span translate="osmmapscongestionApp.edge.length">Length</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{edge.length}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span translate="osmmapscongestionApp.edge.speedMax">SpeedMax</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{edge.speedMax}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span translate="osmmapscongestionApp.edge.type">Type</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{edge.type}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span translate="osmmapscongestionApp.edge.name">Name</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{edge.name}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span translate="osmmapscongestionApp.edge.isOneway">IsOneway</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{edge.isOneway}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span translate="osmmapscongestionApp.edge.weight">Weight</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{edge.weight}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span translate="osmmapscongestionApp.edge.way_id">Way_id</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{edge.way_id}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>StartNode</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{edge.startNode}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>EndNode</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{edge.endNode}}</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <button type="submit"
+            onclick="window.history.back()"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span translate="entity.action.back"> Back</span>
+    </button>
+</div>

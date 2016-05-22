@@ -1,0 +1,43 @@
+{
+    "relationships": [],
+    "fields": [
+        {
+            "fieldId": 1,
+            "fieldName": "length",
+            "fieldType": "Double"
+        },
+        {
+            "fieldId": 2,
+            "fieldName": "speedMax",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldId": 3,
+            "fieldName": "type",
+            "fieldType": "String"
+        },
+        {
+            "fieldId": 4,
+            "fieldName": "name",
+            "fieldType": "String"
+        },
+        {
+            "fieldId": 5,
+            "fieldName": "isOneway",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldId": 6,
+            "fieldName": "weight",
+            "fieldType": "Double"
+        },
+        {
+            "fieldId": 7,
+            "fieldName": "way_id",
+            "fieldType": "Long"
+        }
+    ],
+    "dto": "mapstruct",
+    "service": "serviceClass",
+    "pagination": "pagination"
+}

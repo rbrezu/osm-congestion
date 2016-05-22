@@ -1,0 +1,29 @@
+{
+    "osmmapscongestionApp": {
+        "edge" : {
+            "home": {
+                "title": "Edges",
+                "createLabel": "Créer un nouveau Edge",
+                "createOrEditLabel": "Créer ou éditer un Edge",
+                "search": "Search for Edge"
+            },
+            "created": "Un nouveau Edge a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Edge avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Edge avec l'identifiant {{ param }} a été supprimé",
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Edge {{ id }} ?"
+            },
+            "detail": {
+                "title": "Edge"
+            },
+            "length": "Length",
+            "speedMax": "SpeedMax",
+            "type": "Type",
+            "name": "Name",
+            "isOneway": "IsOneway",
+            "weight": "Weight",
+            "way_id": "Way_id"
+        }
+    }
+}
+

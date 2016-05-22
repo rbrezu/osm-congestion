@@ -1,0 +1,18 @@
+{
+    "relationships": [],
+    "fields": [
+        {
+            "fieldId": 1,
+            "fieldName": "lon",
+            "fieldType": "Double"
+        },
+        {
+            "fieldId": 2,
+            "fieldName": "lat",
+            "fieldType": "Double"
+        }
+    ],
+    "dto": "mapstruct",
+    "service": "serviceClass",
+    "pagination": "pagination"
+}
