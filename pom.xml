@@ -145,6 +145,13 @@
             <version>${awaitility.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- GeoJson Objects for Jackson -->
+        <dependency>
+            <groupId>de.grundid.opendatalab</groupId>
+            <artifactId>geojson-jackson</artifactId>
+            <version>1.6</version>
+        </dependency>
+        <!--                 END          -->
         <dependency>
             <groupId>com.jayway.jsonpath</groupId>
             <artifactId>json-path</artifactId>

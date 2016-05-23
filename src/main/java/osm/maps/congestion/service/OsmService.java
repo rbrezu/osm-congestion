@@ -1,6 +1,10 @@
 package osm.maps.congestion.service;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.okhttp.ResponseBody;
+import org.geojson.FeatureCollection;
+import org.geojson.LineString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -14,6 +18,7 @@ import osm.maps.congestion.domain.parser.OsmParser;
 import osm.maps.congestion.repository.DirectedEdgeRepository;
 import osm.maps.congestion.repository.GraphNodeRepository;
 import osm.maps.congestion.service.servers.BBox;
+import osm.maps.congestion.service.servers.MapzenServer;
 import osm.maps.congestion.service.servers.OsmServer;
 import retrofit.Response;
 
@@ -27,6 +32,10 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 /**
  * Created by root on 15.05.2016.
@@ -39,6 +48,9 @@ public class OsmService {
     private OsmServer osmServer;
 
     @Inject
+    private MapzenServer mapzenServer;
+
+    @Inject
     private JHipsterProperties properties;
 
     @Inject
@@ -46,6 +58,9 @@ public class OsmService {
 
     @Inject
     private GraphNodeRepository nodeRepository;
+
+    @Inject
+    private ObjectMapper jsonMapper;
 
     private AtomicInteger depthcount = new AtomicInteger(0);
 
@@ -66,7 +81,11 @@ public class OsmService {
         }*/
 
         //addToDb();
-
+        try {
+            requestForFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         watch.stop();
         log.debug("OsmService initialized in: {}",
             watch.getTotalTimeMillis());
@@ -99,6 +118,75 @@ public class OsmService {
             log.debug("Parsing file {} from {}.", k++, mareLista.length);
             parseTheFile(file.toPath());
         }
+    }
+
+    @Async
+    public Future<String> requestForFile () throws IOException {
+        Response<ResponseBody> response = null;
+        boolean socketFuckingTimeoutException = false;
+        try {
+            response = mapzenServer.getFile()
+                .execute();
+        } catch (SocketTimeoutException e) {
+            socketFuckingTimeoutException = true;
+            log.debug("Fucking socket timeout exception for the whole gang !");
+        }
+
+        if (response.isSuccess()) {
+            log.debug("OsmService server worked");
+
+            ZipInputStream in = new ZipInputStream(response.body().byteStream());
+            ZipEntry entry;
+
+            FeatureCollection collection;
+            while ( (entry = in.getNextEntry() ) != null ) {
+                if (entry.getName().equals("sibiu_romania_osm_line.geojson")) {
+                    try {
+                        jsonMapper.disable(JsonParser.Feature.AUTO_CLOSE_SOURCE);
+                        collection = jsonMapper.readValue(in, FeatureCollection.class);
+                        List<String> onewayStreets = collection
+                            .getFeatures()
+                            .parallelStream()
+                            .map(feature -> {
+                                Object property = feature.getProperty("oneway");
+                                if (property instanceof String)
+                                    return (String) property;
+
+                                if (!(feature.getGeometry() instanceof LineString))
+                                    log.debug("FAAAAAAAAACK");
+
+                                return "nope";
+                            })
+                            .collect(Collectors.toList());
+
+                        log.debug("Count of streets {}", onewayStreets.size());
+                    } catch (Exception e) {
+                        log.debug("Serialization fucked up");
+                        e.printStackTrace();
+                    }
+                }
+            }
+            in.close();
+            /*String fileName = "sibiu-file.zip";
+            File savedFile = new File(fileName);
+            OutputStream out = new FileOutputStream(savedFile.getPath());
+
+            int i, totalBytes = 0;
+            byte[] buff = new byte[4096];
+            while ((i = in.read(buff)) > 0) {
+                out.write(buff, 0, i);
+                out.flush();
+                totalBytes += i;
+            }
+
+            in.close();
+            out.close();*/
+            log.debug("Bytes from total {} read!", response.body().contentLength());
+            //parseTheFile(savedFile.toPath());
+            return new AsyncResult<>("ok");
+        }
+
+        return new AsyncResult<>("not ok");
     }
 
     @Async

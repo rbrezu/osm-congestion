@@ -4,6 +4,7 @@ import com.squareup.okhttp.OkHttpClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.stereotype.Component;
+import osm.maps.congestion.service.servers.MapzenServer;
 import osm.maps.congestion.service.servers.OsmServer;
 import retrofit.JacksonConverterFactory;
 import retrofit.Retrofit;
@@ -53,5 +54,13 @@ public class RetrofitConfiguration {
             .baseUrl("http://" + properties.getOsm().getServer())
             .build()
             .create(OsmServer.class);
+    }
+
+    @Bean
+    MapzenServer buildMapzenServer() {
+        return buildRetrofitBuilder()
+            .baseUrl("https://s3.amazonaws.com")
+            .build()
+            .create(MapzenServer.class);
     }
 }
