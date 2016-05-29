@@ -3,10 +3,14 @@ package osm.maps.congestion.service;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.okhttp.ResponseBody;
+import org.geojson.Feature;
 import org.geojson.FeatureCollection;
+import org.geojson.GeoJsonObject;
 import org.geojson.LineString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.geo.Point;
+import org.springframework.data.mongodb.core.geo.GeoJsonLineString;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
@@ -14,8 +18,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
 import org.xmlpull.v1.XmlPullParserException;
 import osm.maps.congestion.config.JHipsterProperties;
+import osm.maps.congestion.domain.Road;
 import osm.maps.congestion.domain.parser.OsmParser;
 import osm.maps.congestion.repository.DirectedEdgeRepository;
+import osm.maps.congestion.repository.RoadRepository;
 import osm.maps.congestion.repository.GraphNodeRepository;
 import osm.maps.congestion.service.servers.BBox;
 import osm.maps.congestion.service.servers.MapzenServer;
@@ -34,7 +40,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 /**
@@ -62,11 +67,15 @@ public class OsmService {
     @Inject
     private ObjectMapper jsonMapper;
 
+    @Inject
+    private RoadRepository featureRepository;
+
     private AtomicInteger depthcount = new AtomicInteger(0);
 
     @PostConstruct
     public void init() {
         log.debug("OsmService initializing");
+
         StopWatch watch = new StopWatch();
         watch.start();
 /*
@@ -79,13 +88,15 @@ public class OsmService {
         } catch (InterruptedException | IOException | ExecutionException e1) {
             e1.printStackTrace();
         }*/
-
         //addToDb();
-        try {
+    /*    try {
             requestForFile();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
+
+        //List<Road> roads = featureRepository.findAllByPropertiesOneway("yes");
+
         watch.stop();
         log.debug("OsmService initialized in: {}",
             watch.getTotalTimeMillis());
@@ -125,7 +136,7 @@ public class OsmService {
         Response<ResponseBody> response = null;
         boolean socketFuckingTimeoutException = false;
         try {
-            response = mapzenServer.getFile()
+            response = mapzenServer.getFile("/metro-extracts.mapzen.com/iasi_romania.osm2pgsql-geojson.zip")
                 .execute();
         } catch (SocketTimeoutException e) {
             socketFuckingTimeoutException = true;
@@ -140,26 +151,34 @@ public class OsmService {
 
             FeatureCollection collection;
             while ( (entry = in.getNextEntry() ) != null ) {
-                if (entry.getName().equals("sibiu_romania_osm_line.geojson")) {
+                if (entry.getName().equals("iasi_romania_osm_line.geojson")) {
                     try {
                         jsonMapper.disable(JsonParser.Feature.AUTO_CLOSE_SOURCE);
                         collection = jsonMapper.readValue(in, FeatureCollection.class);
-                        List<String> onewayStreets = collection
+                        List<Road> roads = collection
                             .getFeatures()
                             .parallelStream()
                             .map(feature -> {
-                                Object property = feature.getProperty("oneway");
-                                if (property instanceof String)
-                                    return (String) property;
+                                LineString lineString = (LineString) feature.getGeometry();
 
-                                if (!(feature.getGeometry() instanceof LineString))
-                                    log.debug("FAAAAAAAAACK");
+                                GeoJsonLineString geoJsonLineString = new GeoJsonLineString(
+                                    lineString.getCoordinates().stream()
+                                        .map(point -> new Point(point.getLongitude(), point.getLatitude()))
+                                        .collect(Collectors.toList())
+                                );
 
-                                return "nope";
+                                Road r = new Road();
+                                r.setGeometry(geoJsonLineString);
+                                r.setType("Feature");
+                                r.setProperties(feature.getProperties());
+
+                                return r;
                             })
                             .collect(Collectors.toList());
 
-                        log.debug("Count of streets {}", onewayStreets.size());
+                        featureRepository.save(roads);
+
+                        log.debug("Count of streets {}", roads.size());
                     } catch (Exception e) {
                         log.debug("Serialization fucked up");
                         e.printStackTrace();

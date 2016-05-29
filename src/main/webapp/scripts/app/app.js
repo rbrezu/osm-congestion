@@ -1,4 +1,15 @@
 'use strict';
+/**
+ * Helper functions for prototype property for classes
+ * */
+
+Function.prototype.property = function(prop, desc) {
+    return Object.defineProperty(this.prototype, prop, desc);
+};
+
+/**
+ * END
+ * */
 
 angular.module('osmmapscongestionApp', ['LocalStorageModule', 'tmh.dynamicLocale', 'pascalprecht.translate',
     'ngResource', 'ngCookies', 'ngAria', 'ngCacheBuster', 'ngFileUpload',
@@ -7,7 +18,7 @@ angular.module('osmmapscongestionApp', ['LocalStorageModule', 'tmh.dynamicLocale
     'ui-leaflet',
     // jhipster-needle-angularjs-add-module JHipster will add new module here
     'ui.bootstrap', 'ui.router',  'infinite-scroll', 'angular-loading-bar'])
-
+    .constant('_', window._)
     .run(function ($rootScope, $location, $window, $http, $state, $translate, Language, Auth, Principal, ENV, VERSION) {
         // update the window title using params in the following
         // precendence

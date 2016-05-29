@@ -7,7 +7,7 @@ angular.module('osmmapscongestionApp')
                 parent: 'site',
                 url: '/leaflet-maps',
                 data: {
-                    authorities: [],
+                    authorities: ['ROLE_USER'],
                     pageTitle: 'Leaflet Maps'
                 },
                 views: {
@@ -15,6 +15,12 @@ angular.module('osmmapscongestionApp')
                         templateUrl: 'scripts/app/leaflet-maps/leaflet-maps.html',
                         controller: 'LeafletMapsController'
                     }
+                },
+                resolve: {
+                    translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                        $translatePartialLoader.addPart('global');
+                        return $translate.refresh();
+                    }]
                 }
             });
     });

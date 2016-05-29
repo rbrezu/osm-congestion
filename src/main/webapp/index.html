@@ -48,6 +48,7 @@
         <!-- build:js scripts/vendor.js -->
         <!-- bower:js -->
         <script src="bower_components/jquery/dist/jquery.js"></script>
+        <script src="bower_components/jquery-mousewheel/jquery.mousewheel.js"></script>
         <script src="bower_components/angular/angular.js"></script>
         <script src="bower_components/angular-aria/angular-aria.js"></script>
         <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
@@ -80,6 +81,9 @@
         <script src="bower_components/leaflet/dist/leaflet.js"></script>
         <script src="bower_components/leaflet-search/dist/leaflet-search.min.js"></script>
         <script src="bower_components/ui-leaflet/dist/ui-leaflet.js"></script>
+        <script src="bower_components/dat.gui/dat.gui.js"></script>
+        <script src="bower_components/dat.gui/dat.color.js"></script>
+        <script src="bower_components/chroma-js/chroma.js"></script>
         <script src="bower_components/d3/d3.js"></script>
         <!-- endbower -->
         <!-- endbuild -->
@@ -88,6 +92,36 @@
     <!-- build:js({.tmp,src/main/webapp}) scripts/app.js -->
     <script src="scripts/app/app.js"></script>
     <script src="scripts/app/app.constants.js"></script>
+
+    <!-- simulation -->
+    <script src="scripts/app/simulation/settings.factory.js"></script>
+    <!-- geometry -->
+    <script src="scripts/app/simulation/geom/point.factory.js"></script>
+    <script src="scripts/app/simulation/geom/segment.factory.js"></script>
+    <script src="scripts/app/simulation/geom/curve.factory.js"></script>
+    <script src="scripts/app/simulation/geom/rect.factory.js"></script>
+    <!-- model -->
+    <script src="scripts/app/simulation/model/car.factory.js"></script>
+    <script src="scripts/app/simulation/model/trajectory.factory.js"></script>
+    <script src="scripts/app/simulation/model/lane.factory.js"></script>
+    <script src="scripts/app/simulation/model/lane-position.factory.js"></script>
+    <script src="scripts/app/simulation/model/control-signals.factory.js"></script>
+    <script src="scripts/app/simulation/model/road.factory.js"></script>
+    <script src="scripts/app/simulation/model/intersection.factory.js"></script>
+    <script src="scripts/app/simulation/model/pool.factory.js"></script>
+    <script src="scripts/app/simulation/model/world.factory.js"></script>
+    <!-- visual -->
+    <script src="scripts/app/simulation/visual/graphics.factory.js"></script>
+    <script src="scripts/app/simulation/visual/tool.factory.js"></script>
+    <script src="scripts/app/simulation/visual/highlighter.factory.js"></script>
+    <script src="scripts/app/simulation/visual/mover.factory.js"></script>
+    <script src="scripts/app/simulation/visual/intersection-builder.factory.js"></script>
+    <script src="scripts/app/simulation/visual/intersection-mover.factory.js"></script>
+    <script src="scripts/app/simulation/visual/road-builder.factory.js"></script>
+    <script src="scripts/app/simulation/visual/zoomer.factory.js"></script>
+    <script src="scripts/app/simulation/visual/visualizer.factory.js"></script>
+    <!-- simulation -->
+
     <script src="scripts/components/auth/auth.service.js"></script>
     <script src="scripts/components/auth/principal.service.js"></script>
     <script src="scripts/components/auth/authority.directive.js"></script>
@@ -170,6 +204,8 @@
     <script src="scripts/app/google-maps/google-maps.js"></script>
     <script src="scripts/app/leaflet-maps/leaflet-maps.controller.js"></script>
     <script src="scripts/app/leaflet-maps/leaflet-maps.js"></script>
+    <script src="scripts/app/simulation/simulation.controller.js"></script>
+    <script src="scripts/app/simulation/simulation.js"></script>
     <script src="scripts/app/d3-graph/d3-graph.controller.js"></script>
     <script src="scripts/app/d3-graph/d3-graph.js"></script>
     <script src="scripts/app/entities/node/node.js"></script>

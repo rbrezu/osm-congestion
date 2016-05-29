@@ -3,11 +3,21 @@
 
     angular
         .module('osmmapscongestionApp')
+        .service('geoDataService', geoDataService)
         .controller('LeafletMapsController', LeafletMapsController);
 
-    LeafletMapsController.$inject = ['$scope', 'leafletData'];
+    LeafletMapsController.$inject = ['$scope', 'leafletData', 'geoDataService'];
 
-    function LeafletMapsController($scope, leafletData) {
+    function geoDataService($http) {
+        this.getData = function (type) {
+            return $http({
+                method: 'GET',
+                url: 'http://localhost:8080/api/roads'
+            });
+        }
+    }
+
+    function LeafletMapsController($scope, leafletData, geoDataService) {
 
         var roundabout = {
             type: "FeatureCollection", features: [{
@@ -3365,7 +3375,7 @@
         angular.extend($scope, {
             defaults: {
                 tileLayer: '',
-                maxZoom: 30,
+                maxZoom: 27,
                 minZoom: 12
             },
             center: {
@@ -3393,6 +3403,8 @@
         });
 
         leafletData.getMap().then(function (map) {
+            map.doubleClickZoom.disable();
+
             map.addControl(new L.Control.Search({
                 url: 'http://nominatim.openstreetmap.org/search?format=json&q={s}',
                 jsonpParam: 'json_callback',
@@ -3402,12 +3414,13 @@
                 markerLocation: false,
                 autoType: false,
                 autoCollapse: true,
-                minLength: 1,
             }));
 
-            d3.json("http://localhost:8080/scripts/iasi_romania_osm_line.geojson", function (json) {
+            geoDataService.getData("w/e").then(function (response) {
+                var json = response.data;
+
                 var svg = d3.select(map.getPanes().overlayPane).append("svg"),
-                    g = svg.append("g").attr("class", "leaflet-zoom-hide");
+                    g = svg.append("g").attr("class", "leaflet-zoom-animated");
 
                 var transform = d3.geo.transform({point: projectPoint}),
                     path = d3.geo.path()
@@ -3418,8 +3431,9 @@
                     .enter()
                     .append("path");
 
+
                 feature.style("stroke-width", function (d) {
-                    var multiplier = 24;
+                    var multiplier = 1;
                     if (d.properties.oneway === "no")
                         multiplier *= 2;
 
@@ -3444,6 +3458,7 @@
                 });
 
                 map.on("viewreset", reset);
+
                 reset();
 
                 function reset() {
@@ -3457,7 +3472,35 @@
                         .style("top", topLeft[1] + "px");
 
                     g.attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
+                    var zoomLevel = (map.options.minZoom - map.getZoom()) * (map.options.minZoom - map.getZoom());
+
                     feature.attr("d", path);
+                    feature.style("stroke", function (d) {
+                        var color = "brown";
+
+                        if (d.properties.oneway === "yes" || d.properties.oneway === "-1")
+                            return "green";
+
+                     /*   try {
+                            var tags = JSON.parse(
+                                '{' +
+                                (d.properties.tags != null ?
+                                    d.properties.tags
+                                        .replace(/\n/g, " ")
+                                        .replace(/=>/g, ":") :
+                                    " ") +
+                                '}'
+                            );
+
+                            if (tags.lanes != null && parseInt(tags.lanes) != 'NaN')
+                                multiplier *= parseInt(tags.lanes);
+                        } catch (err) {
+                            console.log("wtf");
+                        }*/
+                        //feature.transition().duration(1500);
+
+                        return color;
+                    });
                 }
 
                 function projectPoint(x, y) {
