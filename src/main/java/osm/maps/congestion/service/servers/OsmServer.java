@@ -8,12 +8,11 @@ import retrofit.http.Streaming;
 
 /**
  * Created by root on 15.05.2016.
- */
+*/
 public interface OsmServer {
     @GET("/api/0.6/map")
     @Streaming
     Call<ResponseBody> getMapFile(
         @Query("bbox") BBox left
     );
-
 }

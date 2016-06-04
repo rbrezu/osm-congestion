@@ -52,9 +52,9 @@ angular.module('osmmapscongestionApp')
             if (this.road != null) {
                 this.visualizer.world.addRoad(this.road);
             }
-            if (this.dualRoad != null) {
+            /*if (this.dualRoad != null) {
                 this.visualizer.world.addRoad(this.dualRoad);
-            }
+            }*/
             return this.road = this.dualRoad = this.sourceIntersection = null;
         };
 
@@ -82,10 +82,10 @@ angular.module('osmmapscongestionApp')
         ToolRoadBuilder.prototype.draw = function () {
             if (this.road != null) {
                 this.visualizer.drawRoad(this.road, 0.4);
-            }
+            }/*
             if (this.dualRoad != null) {
                 return this.visualizer.drawRoad(this.dualRoad, 0.4);
-            }
+            }*/
         };
 
         return ToolRoadBuilder;

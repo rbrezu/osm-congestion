@@ -14,11 +14,7 @@ angular.module('osmmapscongestionApp')
             world.carsNumber = 100;
         }
         window.visualizer = new Visualizer(world);
-        visualizer.start();
-
-        /*var myPoints = [100,100, 400,300, 1000,100]; //minimum two points
-        var tension = 1;
-        visualizer.graphics.drawCurveSpline(myPoints, 0.5, false, 26, true); */
+       visualizer.start();
 
         gui = new dat.GUI();
         guiWorld = gui.addFolder('world');

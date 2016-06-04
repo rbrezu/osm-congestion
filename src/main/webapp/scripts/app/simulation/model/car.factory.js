@@ -14,7 +14,7 @@ angular.module('osmmapscongestionApp')
             this.width = 1.7 + random() * 0.2;
             this.length = 3 + 2 * random();
             this.maxSpeed = 30;
-            this.s0 = 2;
+            this.s0 = 1;
             this.timeHeadway = 1.5;
             this.maxAcceleration = 1;
             this.maxDeceleration = 3;

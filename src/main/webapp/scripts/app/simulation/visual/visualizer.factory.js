@@ -235,6 +235,20 @@ angular.module('osmmapscongestionApp')
                 this.toolIntersectionBuilder.draw();
                 this.toolRoadbuilder.draw();
                 this.toolHighlighter.draw();
+
+                this.ctx.lineWidth = 0.4;
+                var myPoints = [15, 15, 25, 25, 35, 35, 45, 45, 35, 55, 25, 65, 15, 75]; //minimum two points
+                var tension = 1;
+                this.graphics.drawCurveSpline(myPoints, 0.4, false, 26, true);
+                this.graphics.stroke(Settings.colors.roadMarking);
+
+                var tmpArray = myPoints.map(function(obj, index) {
+                    return index % 2 === 0 ? obj + 5 : obj;
+                });
+
+                this.graphics.drawCurveSpline(tmpArray, 0.4, false, 26, true);
+                this.graphics.stroke(Settings.colors.roadMarking);
+
                 this.graphics.restore();
             }
             if (this.running) {
